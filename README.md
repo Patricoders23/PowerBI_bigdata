@@ -1,57 +1,135 @@
-🏏 Cricket Data Analytics: Web Scraping & Power BI ETL
+📖 Project Overview
+This project showcases an advanced technical solution for ETL (Extract, Transform, Load) operations, sourcing sports statistics from the official ESPN Cricinfo website. The main objective was to automate batting data capture using dynamic web scraping in Power Query and create a robust analytical model with DAX.
 
-Descripción del Proyecto
-Este proyecto demuestra una solución técnica avanzada para la extracción, transformación y carga (ETL) de estadísticas deportivas desde la web oficial de ESPN Cricinfo. El objetivo principal fue automatizar la captura de datos de bateo mediante técnicas de scraping dinámico en Power Query.
+🔄 Workflow
+1. Data Extraction (Web Scraping with M)
 
-Flujo de Trabajo (Workflow)
-Scraping Basado en Patrones: Se utilizó la función "Extraer tabla mediante ejemplos" para identificar los selectores CSS necesarios en el HTML de origen.
+Pattern-Based Scraping: Using Web.BrowserContents to render dynamic content and extraction via specific CSS selectors (TABLE.engineTable:nth-child(5)).
+Parameterized Custom Function:
 
-Modularización con Lenguaje M: Se convirtió la consulta inicial en una Función Personalizada parametrizada (ps as text). Esto permite que la URL sea dinámica (&page=" & ps & ") para manejar la paginación del sitio.
+m(ps as text) =>
+let
+    Source = Web.BrowserContents("https://stats.espncricinfo.com/...page="&ps&"..."),
+    #"Extracted Table From Html" = Html.Table(Source, {...}),
+    ...
+in
+    #"Removed Columns"
+This function enables automatic iteration across multiple web pages using the ps parameter.
+2. Robust Data Architecture
 
-Arquitectura de Datos Robusta: * Se creó una tabla de cabeceras estática comprimida en binario para asegurar la consistencia del esquema.
+Compressed Headers: Header table stored as compressed binary to ensure schema consistency:
 
-Se generó una lista iterativa (del 1 al 3) para invocar la función sobre múltiples páginas de forma automática.
+mTable.FromRows(Json.Document(Binary.Decompress(Binary.FromText("...", BinaryEncoding.Base64), Compression.Deflate)))
 
-Pipeline de Limpieza:
+Iterative Invocation: List generation {1..3} to automatically call the function across multiple pages.
 
-Sustitución de valores nulos o caracteres especiales ("-") por valores numéricos calculables.
+3. Transformation Pipeline (Data Cleaning)
+Comprehensive cleaning process in 15 sequential steps:
+TransformationM TechniquePurposeConsolidationTable.Combine({Headers, Query1})Schema and data unionPromotionTable.PromoteHeadersFirst row to headers conversionStrict TypingTable.TransformColumnTypesInt64/Decimal conversionNull CleaningTable.ReplaceValue("-","0")Empty value replacementCritical Localization{{"Ave", type number}}, "en-US"Decimal handling independent of regional settings
+Key Technical Note: The "en-US" configuration in Ave and SR columns ensures the report is Production-Ready and works correctly on systems with Spanish/Latin American regional settings (where comma is used instead of decimal point).
 
-Configuración de Cultura/Locale (en-US) para garantizar que promedios y porcentajes se carguen correctamente sin importar la región del sistema.
+📐 Data Model Output
+Final Data After ETL:
 
-Resultado Final
-Tras el proceso de limpieza, los datos quedaron estructurados de la siguiente manera:
+Volume: 106 rows × 15 columns
+Key Columns:
 
-Volumen: Tabla consolidada de 106 filas y 15 columnas técnicas.
+Player (text): Player name
+Mat (integer): Matches played
+Runs (integer): Total runs
+Ave (decimal): Batting average
+SR (decimal): Strike Rate
+100, 50, 0: Centuries, half-centuries, and ducks
+4s, 6s: Four and six-run hits
 
-Calidad: Tipos de datos estrictos (Enteros para partidos/carreras y Decimales para promedios).
 
-Listos para el Análisis: Limpieza completa de las columnas críticas: Player, Runs, Ave (Average) y SR (Strike Rate).
 
-------------------------------------------------
+Data Quality Achieved:
+✅ Strict data types (Int64 for counts, Decimal for averages)
+✅ Null values eliminated (converted to 0 for mathematical calculations)
+✅ Referential integrity guaranteed through validated schema
 
-Project Overview
-This project showcases an advanced technical solution for ETL (Extract, Transform, Load) operations, sourcing sports statistics from the official ESPN Cricinfo website. The primary goal was to automate the capture of batting data using dynamic web scraping techniques within Power Query.
+🧮 Featured DAX Measures
+1. Weighted Average Runs
+daxAvg Runs Weighted = 
+DIVIDE(
+    SUM('Cricket_Data'[Runs]),
+    SUM('Cricket_Data'[Inns]),
+    0
+)
+Purpose: Calculates actual average runs per innings, handling division by zero.
 
-Workflow
-Pattern-Based Scraping: "Extract table using examples" was utilized to identify the required CSS selectors within the source HTML.
+2. Top Performers (Dynamic Ranking)
+daxPlayer Rank = 
+RANKX(
+    ALL('Cricket_Data'[Player]),
+    [Total Runs],
+    ,
+    DESC,
+    DENSE
+)
+Purpose: Generates dense ranking of players by total runs, ideal for Top N visualizations.
 
-M Language Modularization: The initial query was converted into a parameterized Custom Function (ps as text). This enables dynamic URL handling (&page=" & ps & ") to manage website pagination.
+3. Categorized Strike Rate
+daxSR Category = 
+SWITCH(
+    TRUE(),
+    'Cricket_Data'[SR] >= 140, "Aggressive",
+    'Cricket_Data'[SR] >= 100, "Balanced",
+    'Cricket_Data'[SR] >= 70, "Conservative",
+    "Slow"
+)
+Purpose: Tactical segmentation of players by playing style.
 
-Robust Data Architecture: * A binary-compressed static header table was created to ensure schema consistency.
+4. Boundary Efficiency (Composite Measure)
+daxBoundary Efficiency % = 
+VAR TotalBalls = SUM('Cricket_Data'[BF])
+VAR BoundaryBalls = (SUM('Cricket_Data'[4s]) + SUM('Cricket_Data'[6s]))
+RETURN
+    DIVIDE(BoundaryBalls, TotalBalls, 0) * 100
+Purpose: Advanced KPI measuring what percentage of balls faced resulted in boundary hits (4s or 6s).
 
-An iterative list (1 to 3) was generated to automatically invoke the function across multiple web pages.
+5. Player Consistency (Variance)
+daxPlayer Consistency = 
+VAR AvgScore = [Avg Runs Weighted]
+VAR Variance = 
+    SUMX(
+        'Cricket_Data',
+        POWER('Cricket_Data'[Runs] - AvgScore, 2)
+    ) / COUNT('Cricket_Data'[Runs])
+RETURN
+    SQRT(Variance)
+```
+**Purpose**: Calculates standard deviation to identify players with predictable vs. volatile performance.
 
-Cleaning Pipeline:
+---
 
-Replacement of null values or special characters ("-") with calculable numeric values (0).
+### 📁 Project Architecture (PBIP vs PBIX)
 
-Culture/Locale (en-US) configuration to ensure averages and percentages load correctly regardless of the host system's regional settings.
+**Why PBIP Instead of PBIX?**
 
-Final Result
-After the cleaning process, the data was structured as follows:
+This project uses **PBIP (Power BI Project)** format for data engineering reasons:
 
-Volume: A consolidated table consisting of 106 rows and 15 technical columns.
+✅ **Granular Version Control**: Git can track specific changes in JSON/plain text files  
+✅ **Simultaneous Collaboration**: Multiple developers can work without merge conflicts  
+✅ **Effective Code Review**: DAX and M changes are human-readable in pull requests  
 
-Quality: Strict data typing (Integers for matches/runs and Decimals for averages).
+**Repository Structure:**
+```
+WebScraping_criquet/
+├── .gitignore                          # Excludes Power BI temp files
+├── WebScraping_criquet.pbip            # Main project file
+├── WebScraping_criquet.pbix            # Compiled version (distribution)
+├── WebScraping_criquet.Report/         # Visual definitions
+└── WebScraping_criquet.SemanticModel/  # Data model and M transformations
 
-Analysis-Ready: Complete sanitization of critical columns: Player, Runs, Ave (Average), and SR (Strike Rate).
+🛠️ Technical Stack
+LayerTechnologyUsageExtractionM (Power Query)Dynamic web scraping with parameterized functionsTransformationM + Regex15-step ETL pipeline with data cleaningModelingDAXCalculated measures, rankings, and advanced KPIsVisualizationPower BI DesktopInteractive dashboardsVersion ControlGit + PBIPCode change traceability
+
+💡 Key Interview Points
+When asked about this project, highlight:
+
+"I implemented a modular architecture in M": Parameterized function + compressed headers + sequential cleaning pipeline.
+"I applied data localization (en-US)": Ensures the report works on any operating system without decimal parsing errors.
+"I used DAX for advanced analytics": From dynamic rankings to statistical metrics like standard deviation.
+"I chose PBIP for DataOps": Facilitates collaborative work and change traceability in enterprise data teams.
