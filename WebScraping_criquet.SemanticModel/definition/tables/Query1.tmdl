@@ -1,0 +1,189 @@
+table Query1
+	isHidden
+	lineageTag: 5e45ead5-f70e-4ba0-a416-b01b9917ca09
+
+	column Column1
+		dataType: string
+		isHidden
+		lineageTag: 96253d16-cdc4-4902-b77b-d3ec951c8693
+		summarizeBy: none
+		sourceColumn: Column1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column2
+		dataType: string
+		isHidden
+		lineageTag: 5e5926b7-118a-45c2-be7c-7d9f8afa3e86
+		summarizeBy: none
+		sourceColumn: Column2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column3
+		dataType: string
+		isHidden
+		lineageTag: a86906d8-2e2d-42d6-a89b-3e0eb0d54f63
+		summarizeBy: none
+		sourceColumn: Column3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column4
+		dataType: string
+		isHidden
+		lineageTag: 6f08d03a-f5c3-40c2-92a6-f81adc7dfd49
+		summarizeBy: none
+		sourceColumn: Column4
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column5
+		dataType: string
+		isHidden
+		lineageTag: 829e8ba4-47d7-4aa9-b3af-1bda94c00c3a
+		summarizeBy: none
+		sourceColumn: Column5
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column6
+		dataType: string
+		isHidden
+		lineageTag: c5ca3260-309c-48f6-81aa-29b2d66f87b5
+		summarizeBy: none
+		sourceColumn: Column6
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column7
+		dataType: string
+		isHidden
+		lineageTag: 0d54b755-12d3-4865-b868-ee90c90aaeb1
+		summarizeBy: none
+		sourceColumn: Column7
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column8
+		dataType: string
+		isHidden
+		lineageTag: 5a9804cc-3cc7-4e4c-b2ce-c99a9ec0017d
+		summarizeBy: none
+		sourceColumn: Column8
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column9
+		dataType: string
+		isHidden
+		lineageTag: 5287c677-88b0-4337-b827-039353a4cfe0
+		summarizeBy: none
+		sourceColumn: Column9
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column10
+		dataType: string
+		isHidden
+		lineageTag: e5a80390-0285-4990-abae-73a7a78c54cd
+		summarizeBy: none
+		sourceColumn: Column10
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column11
+		dataType: string
+		isHidden
+		lineageTag: 990cfd5d-22d6-4f2c-b059-c875a37d5cb7
+		summarizeBy: none
+		sourceColumn: Column11
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column12
+		dataType: string
+		isHidden
+		lineageTag: 01d5f0d1-f1ed-4077-a120-87a0d0407573
+		summarizeBy: none
+		sourceColumn: Column12
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column13
+		dataType: string
+		isHidden
+		lineageTag: c3333667-7266-44e3-867e-4e14e6e55cbc
+		summarizeBy: none
+		sourceColumn: Column13
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column14
+		dataType: string
+		isHidden
+		lineageTag: d2fcb555-8674-4fdd-ad54-45f93d4e37b0
+		summarizeBy: none
+		sourceColumn: Column14
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column15
+		dataType: string
+		isHidden
+		lineageTag: ecfadda1-532c-498e-8ce6-d2ba7e5054aa
+		summarizeBy: none
+		sourceColumn: Column15
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Query1 = m
+		mode: import
+		source =
+				let
+				    Source = {1..3},
+				    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Converted to Table",{{"Column1", type text}}),
+				    #"Invoked Custom Function" = Table.AddColumn(#"Changed Type", "ESPN", each ESPN([Column1])),
+				    #"Expanded ESPN1" = Table.ExpandTableColumn(#"Invoked Custom Function", "ESPN", {"Column1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14", "Column15"}, {"Column1.1", "Column2", "Column3", "Column4", "Column5", "Column6", "Column7", "Column8", "Column9", "Column10", "Column11", "Column12", "Column13", "Column14", "Column15"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Expanded ESPN1",{"Column1"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"Column1.1", "Column1"}})
+				in
+				    #"Renamed Columns"
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

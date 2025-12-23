@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "WebScraping_criquet"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "ca1ca562-6a32-475a-ad3c-d8d0ce42d3ee"
+  }
+}

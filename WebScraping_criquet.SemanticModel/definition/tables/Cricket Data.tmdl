@@ -1,0 +1,179 @@
+table 'Cricket Data'
+	lineageTag: 14ac5656-d29c-4e14-9267-c3808154229c
+
+	column Player
+		dataType: string
+		lineageTag: 346dc727-d682-4cf0-b5ad-f97619e16944
+		summarizeBy: none
+		sourceColumn: Player
+
+		annotation SummarizationSetBy = Automatic
+
+	column Span
+		dataType: string
+		lineageTag: 5720e554-6112-471e-a4be-ffbde077d1e1
+		summarizeBy: none
+		sourceColumn: Span
+
+		annotation SummarizationSetBy = Automatic
+
+	column Mat
+		dataType: int64
+		formatString: 0
+		lineageTag: 4f56f939-922e-449f-b7dd-be0182ca55e3
+		summarizeBy: sum
+		sourceColumn: Mat
+
+		annotation SummarizationSetBy = Automatic
+
+	column Inns
+		dataType: int64
+		formatString: 0
+		lineageTag: ccdc1d29-590f-40aa-9379-4fb1f0448748
+		summarizeBy: sum
+		sourceColumn: Inns
+
+		annotation SummarizationSetBy = Automatic
+
+	column NO
+		dataType: int64
+		formatString: 0
+		lineageTag: b5a935ec-52cb-43c8-a776-4599025ae1c3
+		summarizeBy: sum
+		sourceColumn: NO
+
+		annotation SummarizationSetBy = Automatic
+
+	column Runs
+		dataType: int64
+		formatString: 0
+		lineageTag: 9f57ef06-44f3-4c88-94d5-0a35c13f8464
+		summarizeBy: sum
+		sourceColumn: Runs
+
+		annotation SummarizationSetBy = Automatic
+
+	column HS
+		dataType: string
+		lineageTag: 7830cad1-f8c0-4b24-b9ae-b8137a8b701e
+		summarizeBy: none
+		sourceColumn: HS
+
+		annotation SummarizationSetBy = Automatic
+
+	column Ave
+		dataType: double
+		lineageTag: a0f38ef3-4f2f-4a41-a132-bd47265ee217
+		summarizeBy: sum
+		sourceColumn: Ave
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column BF
+		dataType: int64
+		formatString: 0
+		lineageTag: 70914362-15ae-44f2-8dff-2deca569d63e
+		summarizeBy: sum
+		sourceColumn: BF
+
+		annotation SummarizationSetBy = Automatic
+
+	column SR
+		dataType: double
+		lineageTag: 58738ab9-9a76-4f9a-b66e-d2bed9e98bed
+		summarizeBy: sum
+		sourceColumn: SR
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 100
+		dataType: int64
+		formatString: 0
+		lineageTag: 1e8d95f0-2111-4906-8e58-d3ae03c81809
+		summarizeBy: sum
+		sourceColumn: 100
+
+		annotation SummarizationSetBy = Automatic
+
+	column 50
+		dataType: int64
+		formatString: 0
+		lineageTag: 18867934-ff1d-494d-874c-296ee921c026
+		summarizeBy: sum
+		sourceColumn: 50
+
+		annotation SummarizationSetBy = Automatic
+
+	column 0
+		dataType: int64
+		formatString: 0
+		lineageTag: be1f891f-2ed7-47f2-84d6-f5a727ffec0e
+		summarizeBy: sum
+		sourceColumn: 0
+
+		annotation SummarizationSetBy = Automatic
+
+	column 4s
+		dataType: int64
+		formatString: 0
+		lineageTag: 0c6e617c-0d46-402d-b7b5-80aa0014d85b
+		summarizeBy: sum
+		sourceColumn: 4s
+
+		annotation SummarizationSetBy = Automatic
+
+	column 6s
+		dataType: int64
+		formatString: 0
+		lineageTag: edc1c45b-a3e9-49b4-ac00-f0eb88d98766
+		summarizeBy: sum
+		sourceColumn: 6s
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Cricket Data' = m
+		mode: import
+		source =
+				let
+				    Source = Table.Combine({Headers, Query1}),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Player", type text}, {"Span", type text}, {"Mat", Int64.Type}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","-","0",Replacer.ReplaceText,{"Inns"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Replaced Value", each true),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Filtered Rows","-","0",Replacer.ReplaceText,{"NO"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value1",{{"Inns", Int64.Type}, {"NO", Int64.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type1",{{"RunsDescending", "Runs"}}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Renamed Columns","-","0",Replacer.ReplaceText,{"Runs"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Replaced Value2",{{"Runs", Int64.Type}}),
+				    #"Filtered Rows1" = Table.SelectRows(#"Changed Type2", each true),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Filtered Rows1","-","0",Replacer.ReplaceText,{"Ave"}),
+				    #"Filtered Rows2" = Table.SelectRows(#"Replaced Value3", each true),
+				    #"Changed Type with Locale" = Table.TransformColumnTypes(#"Filtered Rows2", {{"Ave", type number}}, "en-US"),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Changed Type with Locale","-","0",Replacer.ReplaceText,{"BF"}),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Replaced Value4",{{"BF", Int64.Type}}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Changed Type3","-","0",Replacer.ReplaceText,{"SR"}),
+				    #"Changed Type with Locale1" = Table.TransformColumnTypes(#"Replaced Value5", {{"SR", type number}}, "en-US"),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Changed Type with Locale1","-","0",Replacer.ReplaceText,{"100"}),
+				    #"Changed Type4" = Table.TransformColumnTypes(#"Replaced Value6",{{"100", Int64.Type}}),
+				    #"Filtered Rows3" = Table.SelectRows(#"Changed Type4", each true),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Filtered Rows3","-","0",Replacer.ReplaceText,{"50"}),
+				    #"Changed Type5" = Table.TransformColumnTypes(#"Replaced Value7",{{"50", Int64.Type}}),
+				    #"Replaced Value8" = Table.ReplaceValue(#"Changed Type5","-","0",Replacer.ReplaceText,{"0"}),
+				    #"Changed Type6" = Table.TransformColumnTypes(#"Replaced Value8",{{"0", Int64.Type}}),
+				    #"Replaced Value9" = Table.ReplaceValue(#"Changed Type6","-","0",Replacer.ReplaceText,{"4s"}),
+				    #"Changed Type7" = Table.TransformColumnTypes(#"Replaced Value9",{{"4s", Int64.Type}}),
+				    #"Replaced Value10" = Table.ReplaceValue(#"Changed Type7","-","0",Replacer.ReplaceText,{"6s"}),
+				    #"Changed Type8" = Table.TransformColumnTypes(#"Replaced Value10",{{"6s", Int64.Type}})
+				in
+				    #"Changed Type8"
+
+	changedProperty = Name
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,15 @@
+expression ESPN =
+		(ps as text) =>
+		let
+		    Source = Web.BrowserContents("https://stats.espncricinfo.com/ci/engine/stats/index.html?class=2;home_or_away=1;opposition=2;page="&ps&";team=6;template=results;type=batting"),
+		    #"Extracted Table From Html" = Html.Table(Source, {{"Column1", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(1)"}, {"Column2", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(2)"}, {"Column3", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(3)"}, {"Column4", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(4)"}, {"Column5", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(5)"}, {"Column6", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(6)"}, {"Column7", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(7)"}, {"Column8", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(8)"}, {"Column9", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(9)"}, {"Column10", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(10)"}, {"Column11", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(11)"}, {"Column12", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(12)"}, {"Column13", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(13)"}, {"Column14", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(14)"}, {"Column15", "TABLE.engineTable:nth-child(5) > TBODY > TR > :nth-child(15)"}, {"Column16", ":not(*)"}}, [RowSelector="TABLE.engineTable:nth-child(5) > TBODY > TR"]),
+		    #"Filtered Rows" = Table.SelectRows(#"Extracted Table From Html", each true),
+		    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Column16"})
+		in
+		    #"Removed Columns"
+	lineageTag: 8b902fed-011b-4a6a-8419-eef7687060bf
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

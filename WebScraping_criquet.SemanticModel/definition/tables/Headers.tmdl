@@ -1,0 +1,183 @@
+table Headers
+	isHidden
+	lineageTag: d3d86503-8333-4cee-b843-144cf95ed99f
+
+	column Column1
+		dataType: string
+		isHidden
+		lineageTag: 5b77b2ea-3048-43bd-9bbb-07d2a0ba64d4
+		summarizeBy: none
+		sourceColumn: Column1
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column2
+		dataType: string
+		isHidden
+		lineageTag: 2c2a136b-1d9f-49c4-b3ca-3669dea9f95f
+		summarizeBy: none
+		sourceColumn: Column2
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column3
+		dataType: string
+		isHidden
+		lineageTag: d6a5d941-9a79-4f06-90c6-0aad9c43a8f2
+		summarizeBy: none
+		sourceColumn: Column3
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column4
+		dataType: string
+		isHidden
+		lineageTag: befd792f-6ddc-4e25-85ce-ec2798fd1125
+		summarizeBy: none
+		sourceColumn: Column4
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column5
+		dataType: string
+		isHidden
+		lineageTag: f675917b-01fe-4377-b30d-51246381ba27
+		summarizeBy: none
+		sourceColumn: Column5
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column6
+		dataType: string
+		isHidden
+		lineageTag: ae3a7a50-21ec-49b9-b4ac-fa5258f13e81
+		summarizeBy: none
+		sourceColumn: Column6
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column7
+		dataType: string
+		isHidden
+		lineageTag: ce9249bc-19ec-442f-906e-92195f4f0a5e
+		summarizeBy: none
+		sourceColumn: Column7
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column8
+		dataType: string
+		isHidden
+		lineageTag: e6138fcd-12b4-4a58-b855-747dce47c4b8
+		summarizeBy: none
+		sourceColumn: Column8
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column9
+		dataType: string
+		isHidden
+		lineageTag: 9c044d2b-6486-4f4c-9d1d-373c6832b5ab
+		summarizeBy: none
+		sourceColumn: Column9
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column10
+		dataType: string
+		isHidden
+		lineageTag: 4311f992-2c1a-4cd2-82e9-eb360fc3152e
+		summarizeBy: none
+		sourceColumn: Column10
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column11
+		dataType: string
+		isHidden
+		lineageTag: 13022e81-3670-4fa1-90d5-73faf085e869
+		summarizeBy: none
+		sourceColumn: Column11
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column12
+		dataType: string
+		isHidden
+		lineageTag: 49a83303-f893-46f3-9c88-25230e36f72a
+		summarizeBy: none
+		sourceColumn: Column12
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column13
+		dataType: string
+		isHidden
+		lineageTag: 96fc6c0b-b2e8-4637-8f20-ad017907e057
+		summarizeBy: none
+		sourceColumn: Column13
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column14
+		dataType: string
+		isHidden
+		lineageTag: 07582740-03d8-4d4b-a494-e2fe3720fecc
+		summarizeBy: none
+		sourceColumn: Column14
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Column15
+		dataType: string
+		isHidden
+		lineageTag: 6aa60be8-43ea-453e-9a0a-0c0b2e5799dd
+		summarizeBy: none
+		sourceColumn: Column15
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Headers = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i45WCshJrEwtUtJRCi5IzANSvoklQNIzL68YSPn5A4mg0rxil9Ti5NS8lMy8dKCARzCQcCxLBZJObiCdQUDC0MAASJqCCBA2AWk3K1aKjQUA", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t, Column2 = _t, Column3 = _t, Column4 = _t, Column5 = _t, Column6 = _t, Column7 = _t, Column8 = _t, Column9 = _t, Column10 = _t, Column11 = _t, Column12 = _t, Column13 = _t, Column14 = _t, Column15 = _t])
+				in
+				    Source
+
+	changedProperty = IsHidden
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
