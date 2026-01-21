@@ -1,0 +1,14 @@
+En el Estudio de Ataques de Pánico, importo los datos desde Snowflake, realiz0 3 Dashboard. 
+
+* Creo nueva columna y uso DAX ---->     Age Group IF = if('PANIC_ATTACK_DATA'[AGE]<=17,"Child",
+                if('PANIC_ATTACK_DATA'[AGE]<=24,"Adolescent",
+                    if('PANIC_ATTACK_DATA'[AGE]<=64,"Adult","Senior") 
+                    )
+también creo esta columna  usando SWITCH FUNCTION:  Age Group Switch = SWITCH(true(),'PANIC_ATTACK_DATA'[AGE]<=17, "Child",'PANIC_ATTACK_DATA'[AGE]<=24,"Adolescent", 'PANIC_ATTACK_DATA'[AGE]<=64,"Adult","Senior")
+
+Crea la misma columna usando IF y Switch en Dax. 
+
+*Creo una nueva medida: % Patients Dizziness = DIVIDE(COUNTROWS(FILTER
+('PANIC_ATTACK_DATA','PANIC_ATTACK_DATA'[DIZZINESS]=true())),
+COUNTROWS('PANIC_ATTACK_DATA'),0) 
+
